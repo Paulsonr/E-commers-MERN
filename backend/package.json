@@ -1,0 +1,27 @@
+{
+  "name": "e_commerce_be",
+  "version": "1.0.0",
+  "description": "A simple e-commerce application using MERN stack.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Paulsonr/E-commers-MERN.git"
+  },
+  "author": "Paulson Robert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Paulsonr/E-commers-MERN/issues"
+  },
+  "homepage": "https://github.com/Paulsonr/E-commers-MERN#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.2.1"
+  }
+}
