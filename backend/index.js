@@ -5,7 +5,7 @@ const AuthRoute = require("./routes/auth.route");
 const ProductRoute = require("./routes/products.route");
 const CartRoute = require("./routes/cart.route");
 const app = express();
-const PORT = 5000;
+const PORT = 4000;
 
 //middleware
 app.use(express.json());
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 
 // databse connection
 mongoose
-  .connect("mongodb+srv://paulsonr07:mern123@cluster0.owhlbiu.mongodb.net/")
+  .connect("mongodb+srv://paulsonr07:root123@cluster0.owhlbiu.mongodb.net/")
   .then(() => {
     console.log("Database Connected!");
     app.listen(PORT, () => console.log("Server running on port " + PORT));

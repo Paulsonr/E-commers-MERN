@@ -1,9 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 const env_var = process.env.REACT_APP_ENV_VAR;
 const auth_module = process.env.REACT_APP_AUTH_ROUTE;
 
 const Signin = () => {
+  const navigate = useNavigate();
   const authModuleURL = `${env_var}${auth_module}`;
   const [data, setData] = useState({
     email: "",
@@ -16,10 +19,11 @@ const Signin = () => {
     axios
       .post(`${authModuleURL}/signin`, data)
       .then((response) => {
-        console.log("FE >> ", response.data);
+        toast.success(response.data.message);
+        navigate("/")
       })
       .catch((error) => {
-        console.log("FE >> ", error);
+        toast.error(error.message)
       });
   };
   return (
