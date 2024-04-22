@@ -7,7 +7,8 @@ import {
   useNavigationType,
   useLocation,
 } from "react-router-dom";
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // //pages
 import Home from "./Pages/home";
 import SignIn from "./Pages/signin";
@@ -68,9 +69,13 @@ function App() {
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+      />
       {/* <Router> */}
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/products" element={<Products />} />
