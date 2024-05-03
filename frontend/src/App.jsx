@@ -7,8 +7,10 @@ import {
   useNavigationType,
   useLocation,
 } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { UserContextProvider } from "./Context/userContext";
 // //pages
 import Home from "./Pages/home";
 import SignIn from "./Pages/signin";
@@ -18,6 +20,8 @@ import ProductDetail from "./Pages/productDetail";
 import Cart from "./Pages/cart";
 //
 import "./App.css";
+
+axios.defaults.withCredentials = true;
 
 function App() {
   const action = useNavigationType();
@@ -39,14 +43,14 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/signin":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/homepage":
-        title = "";
-        metaDescription = "";
-        break;
+      // case "/signin":
+      //   title = "";
+      //   metaDescription = "";
+      //   break;
+      // case "/homepage":
+      //   title = "";
+      //   metaDescription = "";
+      //   break;
       case "/signup":
         title = "";
         metaDescription = "";
@@ -68,22 +72,19 @@ function App() {
   }, [pathname]);
 
   return (
-    <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-      />
+    <UserContextProvider>
+      <ToastContainer position="top-right" autoClose={3000} />
       {/* <Router> */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
+        <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<ProductDetail />} />
       </Routes>
       {/* </Router> */}
-    </>
+    </UserContextProvider>
   );
 }
 

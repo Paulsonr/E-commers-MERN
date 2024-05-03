@@ -1,48 +1,80 @@
 import { useState } from "react";
 import axios from "axios";
-import { toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
+import { TextField, FormControl, Button } from "@mui/material";
 const env_var = process.env.REACT_APP_ENV_VAR;
 const auth_module = process.env.REACT_APP_AUTH_ROUTE;
 
 const Signin = () => {
   const navigate = useNavigate();
   const authModuleURL = `${env_var}${auth_module}`;
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
-  const signinUser = (e) => {
-    console.log("SUBMITTING SIGNIN");
-    e.preventDefault();
-    axios
-      .post(`${authModuleURL}/signin`, data)
-      .then((response) => {
-        toast.success(response.data.message);
-        navigate("/")
-      })
-      .catch((error) => {
-        toast.error(error.message)
-      });
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    setEmailError(false);
+    setPasswordError(false);
+
+    if (email == "") {
+      setEmailError(true);
+    }
+    if (password == "") {
+      setPasswordError(true);
+    }
+
+    if (email && password) {
+      let payload = { email: email, password: password };
+      axios
+        .post(`${authModuleURL}/signin`, payload)
+        .then((response) => {
+          toast.success(response.data.message);
+          navigate("/home");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    }
   };
   return (
     <div>
-      <form onSubmit={signinUser}>
-        <label>Email</label>
-        <input
-          type="text"
-          value={data.email}
-          onChange={(e) => setData({ ...data, email: e.target.value })}
+      <form autoComplete="off" onSubmit={handleSubmit}>
+        <h2>Login Form</h2>
+        <TextField
+          label="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          variant="outlined"
+          color="secondary"
+          type="email"
+          sx={{ mb: 3 }}
+          fullWidth
+          value={email}
+          error={emailError}
         />
-        <label>Password</label>
-        <input
+        <TextField
+          label="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          variant="outlined"
+          color="secondary"
           type="password"
-          value={data.password}
-          onChange={(e) => setData({ ...data, password: e.target.value })}
+          value={password}
+          error={passwordError}
+          fullWidth
+          sx={{ mb: 3 }}
         />
-        <button type="submit">Submit</button>
+        <Button variant="outlined" color="secondary" type="submit">
+          Login
+        </Button>
       </form>
+      <small>
+        Need an account? <Link to="/signup">Register here</Link>
+      </small>
     </div>
   );
 };
