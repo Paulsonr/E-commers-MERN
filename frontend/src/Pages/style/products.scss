@@ -1,0 +1,22 @@
+.products_container {
+  width: 100%;
+  display: flex;
+  flex-flow: wrap;
+  .product_card {
+    width: 150px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    .img_box {
+      width: inherit;
+      height: 150px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}

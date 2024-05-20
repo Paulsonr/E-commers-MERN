@@ -1,0 +1,14 @@
+nav {
+  height: 56px;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  .logo img {
+    width: 120px;
+    height: 100%;
+    object-fit: contain;
+  }
+  .search_box {
+    width: 40%;
+  }
+}
