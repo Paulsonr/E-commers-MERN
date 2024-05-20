@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const env_var = process.env.REACT_APP_ENV_VAR;
 const auth_module = process.env.REACT_APP_AUTH_ROUTE;
@@ -8,11 +9,15 @@ export const UserContext = createContext({});
 
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     if (!user) {
       axios.get(`${authModuleURL}/profile`).then(({ data }) => {
         setUser(data);
       });
+    }
+    else {
+      navigate("/");
     }
   }, []);
   return (
