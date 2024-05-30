@@ -81,7 +81,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/about" element={<ProductDetail />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
       </Routes>
       {/* </Router> */}
     </UserContextProvider>

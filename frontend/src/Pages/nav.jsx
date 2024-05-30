@@ -1,98 +1,123 @@
-import { useState, useEffect } from "react";
-import "./style/nav.scss";
-import { styled } from "@mui/material/styles";
-import { InputBase, Box, Autocomplete, TextField } from "@mui/material";
+import React, { useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import InputBase from "@mui/material/InputBase";
+import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
-import useDebounce from "../Shared/Hooks/useDebounce";
+import Popper from "@mui/material/Popper";
+import Paper from "@mui/material/Paper";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "./style/nav.scss";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#e0e0e0",
-  "&:hover": {
-    backgroundColor: "#e0e0e0",
-  },
-  marginLeft: 0,
-  width: "100%",
-}));
+const Nav = () => {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-  },
-}));
-function Nav() {
-  const [query, setQuery] = useState("");
-  const [listing, setListing] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const searchQuery = useDebounce(query, 1000);
-
-  useEffect(() => {
-    setListing("");
-    console.log("API call", searchQuery, query);
-
-    if (searchQuery || query.length < 0) searchCharacter();
-    async function searchCharacter() {
-      setListing("");
-      setLoading(true);
-      const data = {
-        results: [{ name: "ads" }, { name: "ert" }, { name: "qwe" }],
-      };
-      //   console.log("API call", query);
-      setListing(["ads", { name: "ert" }, { name: "qwe" }]);
-      setLoading(false);
+  const fetchSuggestions = async (query) => {
+    if (query) {
+      try {
+        const response = await axios.get(
+          `https://jsonplaceholder.typicode.com/users`
+        );
+        const filteredSuggestions = response.data.filter((user) =>
+          user.name.toLowerCase().includes(query.toLowerCase())
+        );
+        setSuggestions(filteredSuggestions);
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+      }
+    } else {
+      setSuggestions([]);
     }
-  }, [searchQuery]);
+  };
+
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    if (value) {
+      setAnchorEl(event.currentTarget);
+      fetchSuggestions(value);
+    } else {
+      setAnchorEl(null);
+      setSuggestions([]);
+    }
+  };
+
+  const handleClickAway = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "search-popper" : undefined;
 
   return (
-    <nav>
-      <div className="logo">
-        <img src="/images/icons/ecart-logo.png" alt="logo" />
-      </div>
-      <div className="search_box">
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={!listing ? [{ label: "Loading...", id: 0 }] : listing}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="name" />}
-            // onChange={(e) => setQuery(e.target.value)}
-            onInputChange={(e) => setQuery(e.target.value)}
+    <AppBar position="static">
+      <Toolbar>
+        <img src="/images/icons/ecart-logo.png" alt="Logo" className="logo" />
+        <div className="grow" />
+        <div className="search">
+          <div className="searchIcon">
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search…"
+            className="inputInput"
+            inputProps={{ "aria-label": "search" }}
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
-        )}
-
-        {/* {loading && <div>Loading...</div>}
-        {listing && (
-          <Box mt={10} display={"block"}>
-            {listing.map((character) => (
-              <Box key={character.id} mb={10}>
-                <img src={character.image} alt={character.name} />
-                {character.name}
-              </Box>
-            ))}
-          </Box>
-        )} */}
-      </div>
-    </nav>
+          <Popper id={id} open={open} anchorEl={anchorEl} className="popper">
+            <ClickAwayListener onClickAway={handleClickAway}>
+              <Paper>
+                <List>
+                  {suggestions.length === 0 && searchTerm ? (
+                    <ListItem className="listItem">
+                      <ListItemText primary="Nothing found!" />
+                    </ListItem>
+                  ) : (
+                    suggestions.map((suggestion, index) => (
+                      <ListItem button key={index} className="listItem">
+                        <ListItemText primary={suggestion.name} />
+                      </ListItem>
+                    ))
+                  )}
+                </List>
+              </Paper>
+            </ClickAwayListener>
+          </Popper>
+        </div>
+        <div className="grow" />
+        <IconButton
+          aria-label="show cart items"
+          color="inherit"
+          onClick={() => navigate("/cart")}
+        >
+          <Badge badgeContent={4} color="secondary">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
+        <IconButton
+          edge="end"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircleIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   );
-}
+};
 
 export default Nav;
