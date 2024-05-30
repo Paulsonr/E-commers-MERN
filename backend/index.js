@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 //routes
 app.use("/api/auth", AuthRoute);
 app.use("/api/products", ProductRoute);
-// app.use("/api/cart", CartRoute);
+app.use("/api/cart", CartRoute);
 
 app.get("/", (req, res) => {
   res.status(200).send("<h1>home page</h1>");

@@ -1,14 +1,68 @@
-nav {
-  height: 56px;
-  width: 100%;
+$spacing-unit: 8px;
+$border-radius: 4px;
+$background-color: rgba(255, 255, 255, 0.15);
+$background-color-hover: rgba(255, 255, 255, 0.25);
+
+.logo {
+  height: 40px; /* Adjust the size as needed */
+  margin-right: $spacing-unit * 2;
+}
+
+.search {
   display: flex;
-  justify-content: space-evenly;
-  .logo img {
-    width: 120px;
-    height: 100%;
-    object-fit: contain;
+  align-items: center;
+  position: relative;
+  border-radius: $border-radius;
+  background-color: $background-color;
+  &:hover {
+    background-color: $background-color-hover;
   }
-  .search_box {
-    width: 40%;
+  margin-right: $spacing-unit * 2;
+  margin-left: $spacing-unit * 2; // Adjusted margin for centering
+  width: 100%;
+  max-width: 600px;
+  cursor: pointer; // Making the search bar clickable
+  @media (min-width: 600px) {
+    margin-left: $spacing-unit * 3;
+    width: auto;
+    flex-grow: 1;
   }
+}
+
+.searchIcon {
+  padding: 0px $spacing-unit * 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.inputInput {
+  color: inherit;
+  // padding: $spacing-unit;
+  // padding-left: calc(1em + #{$spacing-unit * 4});
+  width: 100%;
+  border: none; // Remove border for cleaner appearance
+  background-color: transparent; // Remove background color for cleaner appearance
+  &:focus {
+    outline: none; // Remove default focus outline
+  }
+}
+
+.popper {
+  z-index: 1300;
+  position: absolute;
+  // transform: translate(470px, 110px) !important;
+  // width: calc(100% - #{$spacing-unit * 4}); // Adjusted width to match dropdown input
+  top: 100%; // Position the dropdown modal below the search bar
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
+
+.listItem {
+  width: 100%; // Set list item width to 100% to match search bar
+}
+
+.grow {
+  flex-grow: 1;
 }
