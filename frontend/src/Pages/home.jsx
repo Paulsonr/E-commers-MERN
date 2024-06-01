@@ -25,8 +25,7 @@ const Home = () => {
     <>
       <div>Home</div>
       <>{!!user && <div>Hi {user.email}</div>}</>
-      <button onClick={handleLogout}>Logout</button>
-      <Nav />
+      <Nav handleLogout={handleLogout} />
       <Products />
     </>
   );

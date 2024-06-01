@@ -1,27 +1,44 @@
 import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  InputBase,
+  Badge,
+  Popper,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Tooltip,
+  ClickAwayListener,
+  Avatar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+} from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
-import Popper from "@mui/material/Popper";
-import Paper from "@mui/material/Paper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Logout from "@mui/icons-material/Logout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./style/nav.scss";
 
-const Nav = () => {
+const Nav = ({ handleLogout }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+
+  // profile
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
+  const profileOpen = Boolean(profileAnchorEl);
+  const handleClick = (event) => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setProfileAnchorEl(null);
+  };
 
   const fetchSuggestions = async (query) => {
     if (query) {
@@ -106,16 +123,64 @@ const Nav = () => {
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <IconButton
-          edge="end"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircleIcon />
-        </IconButton>
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+          </IconButton>
+        </Tooltip>
       </Toolbar>
+      <Menu
+        anchorEl={profileAnchorEl}
+        id="account-menu"
+        open={profileOpen}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&::before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem onClick={handleClose}>
+          <Avatar /> Profile
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
+          Logout
+        </MenuItem>
+      </Menu>
     </AppBar>
   );
 };
