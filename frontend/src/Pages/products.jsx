@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+//mui
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActionArea,
+} from "@mui/material";
+//
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setProducts } from "../Shared/Store/actions/products.action";
@@ -32,15 +41,25 @@ function Products() {
       ) : (
         <div className="products_container">
           {products.map((product) => (
-            <div
-              className="product_card"
-              onClick={() => handleProductClick(product)}
-            >
-              <div className="img_box">
-                <img src={product.image} alt="product_img" />
-              </div>
-              <div className="product_title">{product.name}</div>
-            </div>
+            <Card className="product_card">
+              <CardActionArea onClick={() => handleProductClick(product)}>
+                <CardMedia
+                  component="img"
+                  height="150"
+                  image={product.image}
+                  alt={product.name}
+                  sx={{ objectFit: "contain" }}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {product.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.price}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           ))}
         </div>
       )}
