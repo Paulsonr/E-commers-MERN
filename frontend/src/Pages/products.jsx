@@ -12,7 +12,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setProducts } from "../Shared/Store/actions/products.action";
-import "./style/products.scss";
+import "./styles/products.scss";
+import { setBrudcrumb } from "../Shared/Store/actions/app.action";
 
 const env_var = process.env.REACT_APP_ENV_VAR;
 const product_module = process.env.REACT_APP_PRODUCT_ROUTE;
@@ -21,8 +22,11 @@ function Products() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { products } = useSelector((state) => state.products);
-  const [appTitle, setAppTitle] = useState("");
   const productModuleURL = `${env_var}${product_module}`;
+
+  const updateBrudcrumb = (activateCrumb) => {
+    dispatch(setBrudcrumb([activateCrumb]));
+  };
 
   const handleProductClick = (productDetails) => {
     navigate(`/products/${productDetails._id}`);
@@ -30,12 +34,13 @@ function Products() {
 
   useEffect(() => {
     axios.get(productModuleURL).then((res) => {
+      updateBrudcrumb({ name: "Products", link: "/products" });
       dispatch(setProducts(res.data));
     });
   }, []);
+
   return (
     <>
-      {" "}
       {!products ? (
         <div>Loading...</div>
       ) : (

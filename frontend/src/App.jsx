@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   useNavigationType,
   useLocation,
 } from "react-router-dom";
@@ -18,6 +16,7 @@ import SignUp from "./Pages/signup";
 import Products from "./Pages/products";
 import ProductDetail from "./Pages/productDetail";
 import Cart from "./Pages/cart";
+import Profile from "./Pages/profile";
 //
 import "./App.css";
 
@@ -55,6 +54,9 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      default:
+        title = "";
+        metaDescription = "";
     }
 
     if (title) {
@@ -74,16 +76,17 @@ function App() {
   return (
     <UserContextProvider>
       <ToastContainer position="top-right" autoClose={3000} />
-      {/* <Router> */}
       <Routes>
-        <Route path="/" element={<SignIn />} />
+        <Route exact path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/*" element={<Home />}>
+          {/* {PageRoutes} */}
+          <Route index path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductDetail />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
       </Routes>
-      {/* </Router> */}
     </UserContextProvider>
   );
 }

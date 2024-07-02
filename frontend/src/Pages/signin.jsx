@@ -35,7 +35,7 @@ const Signin = () => {
         .post(`${authModuleURL}/signin`, payload)
         .then((response) => {
           toast.success(response.data.message);
-          navigate("/home");
+          navigate("/products");
         })
         .catch((error) => {
           toast.error(error.response.data.message);
@@ -46,10 +46,7 @@ const Signin = () => {
     }
   };
   useEffect(() => {
-    if (user) navigate("/home");
-    else {
-      // window.history.replaceState(null, null, "/");
-    }
+    if (user) navigate("/products");
   }, [user]);
   return (
     <div>

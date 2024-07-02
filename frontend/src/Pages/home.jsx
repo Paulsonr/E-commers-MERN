@@ -1,9 +1,10 @@
 import { useContext, useEffect } from "react";
 import { UserContext } from "../Context/userContext";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import Products from "./products";
-import Nav from "./nav";
+import Cookies from "js-cookie";
+import { Outlet, useNavigate } from "react-router-dom";
+import Nav from "../Components/Nav";
+import "./styles/home.scss";
 
 const Home = () => {
   const { user, setUser } = useContext(UserContext);
@@ -18,15 +19,24 @@ const Home = () => {
   };
 
   useEffect(() => {
-    console.log(user);
+    // console.log(Cookies.get("token"));
+    !Cookies.get("token") && navigate("/", { replace: true });
   }, [user]);
 
   return (
     <>
-      <div>Home</div>
-      <>{!!user && <div>Hi {user.email}</div>}</>
-      <Nav handleLogout={handleLogout} />
-      <Products />
+      <header>
+        <Nav
+          handleLogout={handleLogout}
+          profileLetter={user?.name?.charAt(0)?.toUpperCase()}
+        />
+      </header>
+      <div className="main_container">
+        <Outlet />
+      </div>
+      <footer>
+        <div>footer</div>
+      </footer>
     </>
   );
 };

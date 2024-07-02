@@ -14,7 +14,7 @@ const Signin = async (req, res) => {
     const match = await comparePassword(password, userDetail.password);
     if (match) {
       jwt.sign(
-        { email: userDetail.email, id: userDetail._id },
+        { email: userDetail.email, id: userDetail._id, name: userDetail.name },
         process.env.JWT_SECRET,
         {},
         (err, token) => {
@@ -69,4 +69,32 @@ const Profile = (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-module.exports = { Signin, Signup, Profile };
+
+const GetUserDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userDetail = await User.findOne({ _id: id });
+
+    if (!userDetail) {
+      res.status(401).json({ message: "User not found!" });
+      return;
+    }
+    res.status(200).json(userDetail);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const UpdateProfile = async (req, res) => {
+  try {
+    const { id: _id } = req.body;
+    const userDetails = await User.findByIdAndUpdate(_id, req.body);
+    if (!userDetails)
+      return res.status(404).json({ message: "User not found!" });
+    const updatedUser = await User.findById(userDetails.id);
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+module.exports = { Signin, Signup, Profile, GetUserDetails, UpdateProfile };
