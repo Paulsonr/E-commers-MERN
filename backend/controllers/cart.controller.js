@@ -64,7 +64,7 @@ const addToCart = async (req, res) => {
 const getCartItems = async (req, res) => {
   try {
     const cart = await Cart.find({});
-    res.status(200).json(cart);
+    res.status(200).json(cart[0]);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -99,7 +99,11 @@ const deleteCartItem = async (req, res) => {
     }
 
     // Update the total price
-    cart.totalPrice -= foundItem.price;
+    if (cart.items.length === 0) {
+      cart.totalPrice = 0;
+    } else {
+      cart.totalPrice -= foundItem.price * cart.items[itemIndex].qty;
+    }
 
     // Save the updated cart
     await cart.save();
@@ -110,8 +114,45 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
+// UPDATE ITEM IN CART
+const updateCartItem = async (req, res) => {
+  try {
+    const { id: CartItemId } = req.params;
+    const { qty } = req.body;
+    // Validate the ProductId
+    if (!mongoose.Types.ObjectId.isValid(CartItemId)) {
+      return res.status(400).json({ message: "Invalid item ID" });
+    }
+    // Find the item by ID
+    const foundItem = await Product.findById(CartItemId);
+    // Find the cart or create a new cart if it doesn't exist already
+    let cart = await Cart.findOne();
+    if (!cart) {
+      cart = new Cart();
+    }
+    // Check if the product already exists in the cart
+    const itemIndex = cart.items.findIndex(
+      (item) => item.item._id.equals(CartItemId) // Changed from item._id to item.item._id
+    );
+    if (itemIndex > -1) {
+      // If the item already exists in the cart update the quantity
+      cart.items[itemIndex].qty = qty;
+    }
+    // Update the total price
+    cart.totalPrice = cart.items.reduce(function (total, item) {
+      return total + item.item.price * item.qty;
+    }, 0);
+    // Save the updated cart
+    await cart.save();
+    res.status(200).json({ message: "Cart Updated", cart });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   addToCart,
   getCartItems,
   deleteCartItem,
+  updateCartItem,
 };

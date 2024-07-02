@@ -9,14 +9,14 @@ export const UserContext = createContext({});
 
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
+  console.log("CONTEXT >> ", user);
   const navigate = useNavigate();
   useEffect(() => {
     if (!user) {
       axios.get(`${authModuleURL}/profile`).then(({ data }) => {
         setUser(data);
       });
-    }
-    else {
+    } else {
       navigate("/");
     }
   }, []);
