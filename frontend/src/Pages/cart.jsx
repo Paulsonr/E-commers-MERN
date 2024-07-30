@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { setProductsToCheckout } from "../Shared/Store/actions/checkout.action";
 
 const env_var = process.env.REACT_APP_ENV_VAR;
 const cart_module = process.env.REACT_APP_CART_ROUTE;
@@ -10,7 +12,9 @@ function Cart() {
   const cartModuleURL = `${env_var}${cart_module}`;
   const [cartData, setCartData] = useState({ items: [], totalPrice: 0 });
   const params = useParams();
-  console.log(Object.values(params).includes("cart"));
+  const navigate = useNavigate();
+  //redux
+  const dispatch = useDispatch();
 
   const handleRemoveCartItem = (cartItemId) => {
     axios
@@ -36,6 +40,11 @@ function Cart() {
       });
   };
 
+  const handleCheckout = () => {
+    dispatch(setProductsToCheckout(cartData.items));
+    navigate("/checkout");
+  };
+
   useEffect(() => {
     axios
       .get(cartModuleURL)
@@ -55,22 +64,20 @@ function Cart() {
           <>
             {cartData?.items.length ? (
               cartData.items.map((item) => (
-                <div key={item.item._id}>
+                <div key={item._id}>
                   <img
-                    src={item.item.image}
-                    alt={item.item.name}
+                    src={item.image}
+                    alt={item.name}
                     width={"60px"}
                     height={"60px"}
                   />
-                  <h3>{item.item.name}</h3>
-                  <p>{item.item.price}</p>
+                  <h3>{item.name}</h3>
+                  <p>{item.price}</p>
                   <div className="d-flex">
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() =>
-                        handleUpdateCart(item.item._id, item.qty + 1)
-                      }
+                      onClick={() => handleUpdateCart(item._id, item.qty + 1)}
                       // disabled={item.qty >= item.item.countInStock}
                     >
                       +
@@ -79,9 +86,7 @@ function Cart() {
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() =>
-                        handleUpdateCart(item.item._id, item.qty - 1)
-                      }
+                      onClick={() => handleUpdateCart(item._id, item.qty - 1)}
                       disabled={item.qty <= 1}
                     >
                       -
@@ -90,7 +95,7 @@ function Cart() {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={() => handleRemoveCartItem(item.item._id)}
+                    onClick={() => handleRemoveCartItem(item._id)}
                   >
                     Remove
                   </Button>
@@ -106,6 +111,7 @@ function Cart() {
           variant="contained"
           color="error"
           disabled={cartData?.items.length === 0}
+          onClick={() => handleCheckout()}
         >
           Checkout
         </Button>

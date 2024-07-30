@@ -9,7 +9,6 @@ const Brudcrumb = () => {
 
   return (
     <div role="presentation">
-      {console.log(brudcrumb)}
       <Breadcrumbs aria-label="breadcrumb">
         {brudcrumb.length > 1 &&
           brudcrumb.map((item, index) => (

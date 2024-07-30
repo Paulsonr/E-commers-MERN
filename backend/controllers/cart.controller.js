@@ -26,7 +26,7 @@ const addToCart = async (req, res) => {
 
     // Check if the product already exists in the cart
     const productIndex = cart.items.findIndex((item) =>
-      item.item._id.equals(ProductId)
+      item._id.equals(ProductId)
     );
     if (productIndex > -1) {
       // If it exists, increase the quantity
@@ -35,13 +35,11 @@ const addToCart = async (req, res) => {
     } else {
       // If it doesn't exist, add it to the items array
       cart.items.push({
-        item: {
-          _id: foundProduct._id,
-          name: foundProduct.name,
-          image: foundProduct.image, // Changed from description to image
-          price: foundProduct.price,
-          // Add other product fields as necessary
-        },
+        _id: foundProduct._id,
+        name: foundProduct.name,
+        image: foundProduct.image, // Changed from description to image
+        price: foundProduct.price,
+        // Add other product fields as necessary
         qty: 1,
       });
     }
@@ -91,7 +89,7 @@ const deleteCartItem = async (req, res) => {
 
     // Check if the product already exists in the cart
     const itemIndex = cart.items.findIndex((item) =>
-      item.item._id.equals(CartItemId)
+      item._id.equals(CartItemId)
     );
     if (itemIndex > -1) {
       // If the item already exists in the cart delete it
@@ -123,8 +121,6 @@ const updateCartItem = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(CartItemId)) {
       return res.status(400).json({ message: "Invalid item ID" });
     }
-    // Find the item by ID
-    const foundItem = await Product.findById(CartItemId);
     // Find the cart or create a new cart if it doesn't exist already
     let cart = await Cart.findOne();
     if (!cart) {
@@ -132,7 +128,7 @@ const updateCartItem = async (req, res) => {
     }
     // Check if the product already exists in the cart
     const itemIndex = cart.items.findIndex(
-      (item) => item.item._id.equals(CartItemId) // Changed from item._id to item.item._id
+      (item) => item._id.equals(CartItemId) // Changed from item._id to item.item._id
     );
     if (itemIndex > -1) {
       // If the item already exists in the cart update the quantity
@@ -140,7 +136,7 @@ const updateCartItem = async (req, res) => {
     }
     // Update the total price
     cart.totalPrice = cart.items.reduce(function (total, item) {
-      return total + item.item.price * item.qty;
+      return total + item.price * item.qty;
     }, 0);
     // Save the updated cart
     await cart.save();

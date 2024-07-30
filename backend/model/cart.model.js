@@ -5,13 +5,11 @@ const CartSchema = mongoose.Schema({
   totalPrice: { type: Number, default: 0 },
   items: [
     {
-      item: {
-        _id: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-        name: String,
-        image: String, // Changed from description to image
-        price: Number,
-        // Add other product fields as necessary
-      },
+      _id: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      name: String,
+      image: String, // Changed from description to image
+      price: Number,
+      // Add other product fields as necessary
       qty: { type: Number, default: 1 },
     },
   ],

@@ -31,7 +31,7 @@ const Nav = ({ handleLogout, profileLetter }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
-  const avoidBrumcrumb = ["profile", "login", "signup", "cart"];
+  const avoidBrumcrumb = ["profile", "login", "signup", "cart", "checkout"];
 
   // profile
   const [profileAnchorEl, setProfileAnchorEl] = useState(null);
