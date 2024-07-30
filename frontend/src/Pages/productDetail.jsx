@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { setBrudcrumb } from "../Shared/Store/actions/app.action";
+import { setProductsToCheckout } from "../Shared/Store/actions/checkout.action";
 
 const env_var = process.env.REACT_APP_ENV_VAR;
 const product_module = process.env.REACT_APP_PRODUCT_ROUTE;
@@ -14,6 +15,7 @@ function ProductDetail() {
   const productModuleURL = `${env_var}${product_module}`;
   const cartModuleURL = `${env_var}${cart_module}`;
   const [productDetails, setProductDetails] = useState({});
+  const navigate = useNavigate();
   //redux
   const dispatch = useDispatch();
   const { brudcrumb } = useSelector((state) => state.app);
@@ -40,6 +42,11 @@ function ProductDetail() {
     });
   };
 
+  const handleBuyNow = () => {
+    dispatch(setProductsToCheckout([productDetails]));
+    navigate("/checkout");
+  };
+
   useEffect(() => {
     getProductDetails();
   }, [id]);
@@ -62,7 +69,7 @@ function ProductDetail() {
             <Button onClick={handleAddToCart} variant="contained">
               Add to Cart
             </Button>
-            <Button variant="contained" color="warning">
+            <Button variant="contained" color="warning" onClick={handleBuyNow}>
               Buy Now
             </Button>
           </div>

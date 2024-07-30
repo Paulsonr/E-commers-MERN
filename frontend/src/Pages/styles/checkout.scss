@@ -1,0 +1,26 @@
+.checkout {
+  padding: 5%;
+
+  .stepper {
+    margin: 20px 0;
+  }
+
+  .step-content {
+    margin: 20px 0;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .button {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .form-container {
+    padding: 20px;
+    margin-top: 20px;
+  }
+}

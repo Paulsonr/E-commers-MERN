@@ -17,6 +17,7 @@ import Products from "./Pages/products";
 import ProductDetail from "./Pages/productDetail";
 import Cart from "./Pages/cart";
 import Profile from "./Pages/profile";
+import Checkout from "./Pages/checkout";
 //
 import "./App.css";
 
@@ -85,6 +86,7 @@ function App() {
           <Route path="products/:id" element={<ProductDetail />} />
           <Route path="cart" element={<Cart />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="checkout" element={<Checkout />} />
         </Route>
       </Routes>
     </UserContextProvider>
